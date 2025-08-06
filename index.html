@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Честит рожден ден, тате!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;600&family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            height: 100vh;
+            position: relative;
+            padding: 25px;
+        }
+
+        .custom-cursor {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 70%);
+            border: 2px solid rgba(255,255,255,0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 20px rgba(255,255,255,0.6);
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+        }
+
+        /* Slideshow Container */
+        .slideshow-container {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            right: 25px;
+            bottom: 25px;
+            z-index: 1;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #000;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* Content Overlay */
+        .content {
+            position: relative;
+            z-index: 10;
+            height: calc(100vh - 50px);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            padding: 2rem 2rem;
+            background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(26,26,46,0.1) 50%, rgba(22,33,62,0.3) 100%);
+            border-radius: 30px;
+            overflow-y: auto;
+            max-height: calc(100vh - 50px);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.3) transparent;
+        }
+
+        /* Custom Scrollbar */
+        .content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 10px;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,107,157,0.4) 100%);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .content::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,107,157,0.6) 100%);
+        }
+
+        .title-container {
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInDown 3s ease-out 0.5s forwards;
+            flex-shrink: 0;
+        }
+
+        .main-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 40px rgba(255,255,255,0.7), 0 0 80px rgba(255,255,255,0.5);
+            margin-bottom: 1rem;
+            animation: titleGlow 5s ease-in-out infinite alternate;
+            letter-spacing: 2px;
+        }
+
+        @keyframes titleGlow {
+            0% { 
+                text-shadow: 0 0 40px rgba(255,255,255,0.7), 0 0 80px rgba(255,255,255,0.5);
+                transform: scale(1);
+            }
+            100% { 
+                text-shadow: 0 0 60px rgba(255,255,255,0.9), 0 0 120px rgba(255,255,255,0.7), 0 0 160px rgba(255,255,255,0.4);
+                transform: scale(1.02);
+            }
+        }
+
+        .message-container {
+            max-width: 900px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeInUp 4s ease-out 2s forwards;
+            padding: 0 1rem;
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        .message {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.1rem, 2.8vw, 1.5rem);
+            font-weight: 400;
+            line-height: 1.8;
+            color: #f8f9fa;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(26,26,46,0.3) 100%);
+            border-radius: 15px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            border-radius: 15px 15px 0 0;
+        }
+
+        .message.active {
+            animation: messageSlideIn 3s ease-out forwards;
+        }
+
+        @keyframes messageSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .love-message {
+            margin-top: 1.5rem;
+            opacity: 0;
+            animation: fadeInGlow 5s ease-out 10s forwards;
+            flex-shrink: 0;
+        }
+
+        .glow-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 700;
+            color: #ff6b9d;
+            text-shadow: 0 0 50px rgba(255,107,157,0.9), 0 0 100px rgba(255,107,157,0.6);
+            animation: loveGlow 4s ease-in-out infinite alternate;
+            letter-spacing: 1px;
+        }
+
+        @keyframes loveGlow {
+            0% { 
+                text-shadow: 0 0 50px rgba(255,107,157,0.9), 0 0 100px rgba(255,107,157,0.6);
+                transform: scale(1);
+            }
+            100% { 
+                text-shadow: 0 0 70px rgba(255,107,157,1), 0 0 140px rgba(255,107,157,0.8), 0 0 200px rgba(255,107,157,0.5);
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-80px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(80px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInGlow {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Interactive Elements */
+        .interactive-elements {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            right: 25px;
+            bottom: 25px;
+            z-index: 5;
+            pointer-events: none;
+            border-radius: 30px;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: #ff6b9d;
+            animation: floatUp 8s linear infinite;
+            pointer-events: none;
+            text-shadow: 0 0 30px rgba(255,107,157,0.9);
+            filter: drop-shadow(0 0 10px rgba(255,107,157,0.5));
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) rotate(36deg) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) rotate(324deg) scale(1);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Enhanced Sparkles */
+        .sparkles {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            right: 25px;
+            bottom: 25px;
+            z-index: 5;
+            pointer-events: none;
+            border-radius: 30px;
+            overflow: hidden;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0.3) 70%);
+            border-radius: 50%;
+            animation: sparkleFloat 12s linear infinite;
+            box-shadow: 0 0 20px rgba(255,255,255,0.9);
+        }
+
+        .sparkle:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .sparkle:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .sparkle:nth-child(4) { left: 40%; animation-delay: 3s; }
+        .sparkle:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .sparkle:nth-child(6) { left: 60%; animation-delay: 5s; }
+        .sparkle:nth-child(7) { left: 70%; animation-delay: 6s; }
+        .sparkle:nth-child(8) { left: 80%; animation-delay: 7s; }
+        .sparkle:nth-child(9) { left: 90%; animation-delay: 0.5s; }
+        .sparkle:nth-child(10) { left: 15%; animation-delay: 1.5s; }
+        .sparkle:nth-child(11) { left: 25%; animation-delay: 2.5s; }
+        .sparkle:nth-child(12) { left: 35%; animation-delay: 3.5s; }
+        .sparkle:nth-child(13) { left: 45%; animation-delay: 4.5s; }
+        .sparkle:nth-child(14) { left: 55%; animation-delay: 5.5s; }
+        .sparkle:nth-child(15) { left: 65%; animation-delay: 6.5s; }
+        .sparkle:nth-child(16) { left: 75%; animation-delay: 7.5s; }
+        .sparkle:nth-child(17) { left: 85%; animation-delay: 0.8s; }
+        .sparkle:nth-child(18) { left: 95%; animation-delay: 1.8s; }
+        .sparkle:nth-child(19) { left: 5%; animation-delay: 2.8s; }
+        .sparkle:nth-child(20) { left: 85%; animation-delay: 3.8s; }
+
+        @keyframes sparkleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) rotate(36deg) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) rotate(324deg) scale(1);
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Enhanced Confetti */
+        .confetti-container {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            right: 25px;
+            bottom: 25px;
+            z-index: 15;
+            pointer-events: none;
+            opacity: 0;
+            animation: confettiShow 10s ease-out 12s forwards;
+            border-radius: 30px;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(45deg, #ff6b9d, #ff8a80);
+            animation: confettiFall 5s linear infinite;
+            border-radius: 2px;
+        }
+
+        .confetti:nth-child(odd) {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+
+        .confetti:nth-child(3n) {
+            background: linear-gradient(45deg, #ffe66d, #ffd93d);
+        }
+
+        .confetti:nth-child(4n) {
+            background: linear-gradient(45deg, #ff8a80, #ff6b6b);
+        }
+
+        .confetti:nth-child(5n) {
+            background: linear-gradient(45deg, #a8e6cf, #88d8c0);
+        }
+
+        @keyframes confettiShow {
+            to { opacity: 1; }
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-10px) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Audio Controls */
+        .audio-controls {
+            position: fixed;
+            bottom: 60px;
+            right: 60px;
+            z-index: 20;
+        }
+
+        .play-button {
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .play-button:hover {
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.2) 100%);
+            transform: scale(1.15);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .pause-icon {
+            display: none;
+        }
+
+        .playing .play-icon {
+            display: none;
+        }
+
+        .playing .pause-icon {
+            display: block;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            z-index: 20;
+            border-radius: 3px;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b9d, #4ecdc4, #ffe66d, #ff8a80);
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 3px;
+            box-shadow: 0 0 20px rgba(255,107,157,0.5);
+        }
+
+        /* Start Button */
+        .start-button {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+            border: 2px solid rgba(255,255,255,0.4);
+            border-radius: 60px;
+            padding: 25px 50px;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            font-family: 'Cinzel', serif;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+
+        .start-button:hover {
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.2) 100%);
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+
+        .start-button.hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            .slideshow-container {
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+            }
+            
+            .content {
+                padding: 1.5rem 1rem;
+                height: calc(100vh - 40px);
+            }
+            
+            .main-title {
+                font-size: clamp(2rem, 7vw, 3.5rem);
+                margin-bottom: 1rem;
+            }
+            
+            .message {
+                font-size: clamp(1rem, 3vw, 1.3rem);
+                padding: 1.2rem;
+                margin-bottom: 1.2rem;
+                line-height: 1.7;
+            }
+            
+            .glow-text {
+                font-size: clamp(1.8rem, 6vw, 2.5rem);
+            }
+
+            .message-container {
+                padding: 0 0.5rem;
+                max-width: 800px;
+            }
+
+            .title-container {
+                margin-bottom: 1.5rem;
+            }
+
+            .love-message {
+                margin-top: 1.5rem;
+            }
+            
+            .interactive-elements,
+            .sparkles,
+            .confetti-container {
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+            }
+            
+            .audio-controls {
+                bottom: 50px;
+                right: 50px;
+            }
+            
+            .progress-container {
+                bottom: 25px;
+                left: 25px;
+                right: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .slideshow-container {
+                top: 15px;
+                left: 15px;
+                right: 15px;
+                bottom: 15px;
+            }
+            
+            .content {
+                padding: 1rem 0.8rem;
+                height: calc(100vh - 30px);
+            }
+            
+            .message {
+                font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+                padding: 1rem;
+                margin-bottom: 1rem;
+                line-height: 1.6;
+            }
+            
+            .main-title {
+                font-size: clamp(1.8rem, 8vw, 2.5rem);
+            }
+            
+            .glow-text {
+                font-size: clamp(1.6rem, 7vw, 2.2rem);
+            }
+            
+            .interactive-elements,
+            .sparkles,
+            .confetti-container {
+                top: 15px;
+                left: 15px;
+                right: 15px;
+                bottom: 15px;
+            }
+            
+            .audio-controls {
+                bottom: 40px;
+                right: 40px;
+            }
+            
+            .progress-container {
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+            }
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1.5s ease;
+        }
+
+        .loading-text {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: #fff;
+            animation: loadingPulse 3s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255,255,255,0.7);
+            letter-spacing: 2px;
+        }
+
+        @keyframes loadingPulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-text">Зареждане...</div>
+    </div>
+
+    <!-- Start Button -->
+    <button class="start-button" id="startButton">Натисни за да започнеш ❤️</button>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="customCursor"></div>
+
+    <!-- Background Slideshow -->
+    <div class="slideshow-container">
+        <div class="slide active" style="background-image: url('IMG-053db39e497a39744d0f8090e6356257-V.jpg')"></div>
+        <div class="slide" style="background-image: url('IMG-a0426de71ac24a10df9cfcf5b5d24aa7-V.jpg')"></div>
+        <div class="slide" style="background-image: url('IMG-7724c67b40414ace294f455344761a9a-V.jpg')"></div>
+        <div class="slide" style="background-image: url('IMG-aaab283bd5312be85e26b2faff33f24e-V.jpg')"></div>
+        <div class="slide" style="background-image: url('IMG-4c049341205efc8b062922f74229e261-V.jpg')"></div>
+        <div class="slide" style="background-image: url('IMG-56bd49b0738c8ae9246d1fb13c270893-V.jpg')"></div>
+    </div>
+
+    <!-- Floating Sparkles -->
+    <div class="sparkles">
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+    </div>
+
+    <!-- Interactive Elements -->
+    <div class="interactive-elements" id="interactiveElements"></div>
+
+    <!-- Content Overlay -->
+    <div class="content">
+        <div class="title-container">
+            <h1 class="main-title">Честит рожден ден, тате!</h1>
+        </div>
+
+        <div class="message-container">
+            <div class="message" id="message1">
+                Има толкова много неща, за които искам да ти благодаря… Ти беше първият човек, който ме научи да вярвам в себе си, да не се отказвам и да давам всичко от сърце – както в спорта, така и в живота.
+            </div>
+            <div class="message" id="message2">
+                Благодарение на теб знам какво значи истинска сила – не само физическа, а и силата да се изправяш, когато е трудно, и да продължаваш напред.
+            </div>
+            <div class="message" id="message3">
+                Ти беше до мен във всяка тренировка, на всяко състезание, но най-важното – беше до мен винаги, когато имах нужда от баща, приятел и опора.
+            </div>
+            <div class="message" id="message4">
+                От теб се научих да бъда мъж, да използвам ръцете си, за да градя, а ума си – за да намирам път напред. Да се грижа за хората, които обичам, и да бъда отговорен и честен.
+            </div>
+            <div class="message" id="message5">
+                Днес ти пожелавам здраве, щастие и спокойствие, защото ти заслужаваш всичко най-добро. Искам да знаеш, че съм горд да съм твой син и че всичко, което съм, е заради теб.
+            </div>
+            <div class="message" id="message6">
+                Обичам те безкрайно, татко, и се надявам винаги да имаме още много моменти заедно, пълни с смях, разговори и обич.
+            </div>
+        </div>
+
+        <div class="love-message">
+            <h2 class="glow-text">Обичам те, татко! ❤️</h2>
+        </div>
+    </div>
+
+    <!-- Confetti Container -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Audio Controls -->
+    <div class="audio-controls">
+        <button class="play-button" id="playButton" onclick="toggleMusic()">
+            <span class="play-icon">▶</span>
+            <span class="pause-icon">⏸</span>
+        </button>
+    </div>
+
+    <script>
+        // Global variables
+        let slideshowStarted = false;
+        let slideshowInterval;
+        let audio = null;
+        let isPlaying = false;
+
+        // Loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 1500);
+            }, 3000);
+        });
+
+        // Start button functionality
+        document.getElementById('startButton').addEventListener('click', startSlideshow);
+
+        function startSlideshow() {
+            if (slideshowStarted) return;
+            
+            slideshowStarted = true;
+            document.getElementById('startButton').classList.add('hidden');
+            
+            // Start the slideshow
+            slideshowInterval = setInterval(nextSlide, 4000);
+            
+            // Show first message immediately
+            setTimeout(() => {
+                messages[0].classList.add('active');
+                currentMessage = 1;
+            }, 500);
+            
+            // Start music
+            toggleMusic();
+        }
+
+        // Custom cursor
+        const cursor = document.getElementById('customCursor');
+        const trails = [];
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 15 + 'px';
+            cursor.style.top = e.clientY - 15 + 'px';
+            
+            // Create cursor trail
+            if (Math.random() < 0.4) {
+                createTrail(e.clientX, e.clientY);
+            }
+        });
+
+        function createTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = x - 7.5 + 'px';
+            trail.style.top = y - 7.5 + 'px';
+            document.body.appendChild(trail);
+            
+            trails.push(trail);
+            
+            setTimeout(() => {
+                trail.remove();
+                trails.splice(trails.indexOf(trail), 1);
+            }, 400);
+        }
+
+        // Slideshow functionality with messages
+        const slides = document.querySelectorAll('.slide');
+        const messages = document.querySelectorAll('.message');
+        let currentSlide = 0;
+        let currentMessage = 0;
+
+        function nextSlide() {
+            if (!slideshowStarted) return;
+            
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+            
+            // Show corresponding message
+            if (currentMessage < messages.length) {
+                messages[currentMessage].classList.add('active');
+                currentMessage++;
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Audio functionality with YouTube music
+        function toggleMusic() {
+            const button = document.getElementById('playButton');
+            
+            if (!audio) {
+                // Create audio object with YouTube music
+                audio = new Audio();
+                audio.src = 'redventdigitalmedia.co.za - Yusuf Cat Stevens - Father Son (320 KBps).mp3';
+                audio.loop = true;
+                audio.volume = 0.4;
+                console.log('To use the YouTube song, download the audio file and update the src below');
+            }
+
+            if (isPlaying) {
+                audio.pause();
+                button.classList.remove('playing');
+                isPlaying = false;
+            } else {
+                audio.play().catch(() => {
+                    console.log('Audio file not found. Please add the background music file to your project.');
+                });
+                button.classList.add('playing');
+                isPlaying = true;
+            }
+        }
+
+        // Create enhanced confetti
+        function createConfetti() {
+            const container = document.getElementById('confettiContainer');
+            const colors = ['#ff6b9d', '#4ecdc4', '#ffe66d', '#ff8a80', '#a8e6cf', '#ffd93d'];
+            
+            for (let i = 0; i < 200; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDelay = Math.random() * 5 + 's';
+                confetti.style.animationDuration = (Math.random() * 5 + 4) + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                container.appendChild(confetti);
+            }
+        }
+
+        // Create floating hearts
+        function createFloatingHeart() {
+            if (!slideshowStarted) return;
+            
+            const container = document.getElementById('interactiveElements');
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 3 + 's';
+            container.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 8000);
+        }
+
+        // Initialize effects
+        setTimeout(createConfetti, 12000);
+        setInterval(createFloatingHeart, 4000);
+
+        // Interactive sparkles on mouse move
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() < 0.2) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = e.clientX + 'px';
+                sparkle.style.top = e.clientY + 'px';
+                sparkle.style.animation = 'sparkleFloat 6s linear';
+                document.querySelector('.sparkles').appendChild(sparkle);
+                
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 6000);
+            }
+        });
+    </script>
+</body>
+</html> 
